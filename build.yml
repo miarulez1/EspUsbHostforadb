@@ -1,0 +1,38 @@
+name: Build ESP32-S3 ADB Host
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install arduino-cli
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Install ESP32 core
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://github.io
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Compile EspUsbHostAdbConnect
+        run: |
+          mkdir -p build_out
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32s3:PSRAM=enabled,FlashSize=8M,PartitionScheme=default_8MB \
+            --libraries . \
+            --output-dir build_out \
+            examples/Vendor/EspUsbHostAdbConnect/EspUsbHostAdbConnect.ino
+
+      - name: Upload merged binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32s3-adb-host-bin
+          path: build_out/*.merged.bin
