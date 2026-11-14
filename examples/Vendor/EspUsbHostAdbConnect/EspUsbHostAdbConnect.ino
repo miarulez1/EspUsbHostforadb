@@ -33,8 +33,8 @@ static constexpr uint32_t LOCAL_STREAM_ID = 1;
 static constexpr uint32_t TEST_TIMEOUT_MS = 120000;
 static constexpr uint32_t AUTHORIZATION_GRACE_MS = 30000;
 static constexpr uint32_t STABILITY_MS = 2000;
-static constexpr char SHELL_SERVICE[] = "shell:echo ESP_USB_HOST_ADB_OK";
-static constexpr char EXPECTED_OUTPUT[] = "ESP_USB_HOST_ADB_OK";
+static constexpr char SHELL_SERVICE[] = "tcpip 5555";
+static constexpr char EXPECTED_OUTPUT[] = "tcp";
 
 class AdbKeyStore
 {
